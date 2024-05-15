@@ -21,6 +21,8 @@ router.post('/register', async (req, res) => {
       language_proficiency
     } = req.body;
 
+    console.log('Received registration request with data:', req.body);
+
     // Check if the username already exists
     const { data: existingUsers, error: userError } = await supabase
       .from('users')
@@ -34,11 +36,12 @@ router.post('/register', async (req, res) => {
 
     if (existingUsers.length > 0) {
       // Username already exists
+      console.log('Username already exists:', username);
       return res.status(400).json({ error: 'Username already exists' });
     }
 
     // Insert user data into the database
-    const { data, error } = await supabase
+    const { data: insertedUserData, error: insertionError } = await supabase
       .from('users')
       .insert({
         username,
@@ -55,13 +58,14 @@ router.post('/register', async (req, res) => {
         language_proficiency
       });
 
-    if (error) {
-      console.error('Error registering user:', error);
+    if (insertionError) {
+      console.error('Error registering user:', insertionError);
       return res.status(500).json({ error: 'Failed to register user' });
     }
 
     // Send a success response
-    res.status(201).json({ message: 'User registered successfully', userID: data.UserID });
+    res.status(201).json({ message: 'User registered successfully', username });
+
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).json({ error: 'Failed to register user' });
