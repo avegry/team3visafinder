@@ -21,6 +21,22 @@ router.post('/register', async (req, res) => {
       language_proficiency
     } = req.body;
 
+    // Check if the username already exists
+    const { data: existingUsers, error: userError } = await supabase
+      .from('users')
+      .select('username')
+      .eq('username', username);
+
+    if (userError) {
+      console.error('Error checking existing user:', userError);
+      return res.status(500).json({ error: 'Failed to register user' });
+    }
+
+    if (existingUsers.length > 0) {
+      // Username already exists
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+
     // Insert user data into the database
     const { data, error } = await supabase
       .from('users')

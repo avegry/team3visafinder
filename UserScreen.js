@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
+import { ipAddress } from './IpAddress';
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.183:3000', // Replace with your API server address
+  baseURL: `http://${ipAddress}:3000`,
   timeout: 10000, // Timeout for requests (in milliseconds)
 });
 

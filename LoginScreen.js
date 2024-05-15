@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios'; // Import Axios for making HTTP requests
+import { ipAddress } from './IpAddress';
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.183:3000', // Replace with your IP address
+  baseURL: `http://${ipAddress}:3000`,
   timeout: 10000, // Optional: Timeout for requests (in milliseconds)
 });
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setusername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
       // Send POST request to login route with username and password
       const response = await api.post('/login', { username, password });
-  
+
       // Check if login was successful
       if (response.status === 200) {
         // Navigate to Home screen if login successful
@@ -42,20 +43,20 @@ const LoginScreen = ({ navigation }) => {
     // Navigate to Register screen
     navigation.navigate('Register');
   };
+
   const handleAboutUs = () => {
     // Navigate to About Us screen
-    navigation.navigate('About');
+    navigation.navigate('About Us');
   };
 
-  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
-        placeholder="username"
+        placeholder="Username"
         value={username}
-        onChangeText={setusername}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
@@ -90,6 +91,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    width: '100%',
   },
 });
 

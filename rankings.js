@@ -2,46 +2,51 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../supabase');
 
-// Define weights for each parameter from database
-const weights = {
-  processingtime_rank: 0.2,
-  stepstocompleteapplication_rank: 0.2,
-  documentchecklist_rank: 0.2,
-  governmentfees_rank: 0.2,
-  pathtocitizenship_rank: 0.2,
-  tradeagreements_rank: 0.2,
-  grantsources_rank: 0.2,
-};
-
 // Define a function to calculate the overall score for a country
-function calculateScore(country) {
+function calculateScore(country, weights) {
   let totalScore = 0;
+  
   for (const key in weights) {
-    // Parse the value as an integer before performing arithmetic
-    const value = parseInt(country[key]);
-    if (!isNaN(value)) {
-      totalScore += value * weights[key];
+    const value = parseFloat(country[key]);
+    const weight = parseFloat(weights[key]) || 0; // Ensure weight is a number and default to 0 if undefined
+    
+    if (!isNaN(value) && !isNaN(weight)) {
+      totalScore += value * weight;
     } else {
-      console.log(`Invalid value for ${key}: ${country[key]}`);
+      console.log(`Invalid value or weight for ${key}: value=${country[key]}, weight=${weights[key]}`);
     }
   }
+  
   return totalScore;
 }
 
 // Handle POST request to submit rankings and get top 5 countries
 router.post('/rankings', async (req, res) => {
-  // Extract rankings data from the request body
-  const {
-    processingTime,
-    stepsToCompleteApplication,
-    documentChecklist,
-    governmentFees,
-    pathToCitizenship,
-    tradeAgreement,
-    grantSourcingApps
-  } = req.body;
-
   try {
+    // Extract weights from the request body
+    const {
+      processingTime,
+      stepsToCompleteApplication,
+      documentChecklist,
+      governmentFees,
+      pathToCitizenship,
+      tradeAgreement,
+      grantSourcingApps
+    } = req.body;
+
+    // Create the weights object from request body and divide each weight by 10
+    const weights = {
+      processingtime_rank: (parseFloat(processingTime) || 0) / 10,
+      stepstocompleteapplication_rank: (parseFloat(stepsToCompleteApplication) || 0) / 10,
+      documentchecklist_rank: (parseFloat(documentChecklist) || 0) / 10,
+      governmentfees_rank: (parseFloat(governmentFees) || 0) / 10,
+      pathtocitizenship_rank: (parseFloat(pathToCitizenship) || 0) / 10,
+      tradeagreements_rank: (parseFloat(tradeAgreement) || 0) / 10,
+      grantsources_rank: (parseFloat(grantSourcingApps) || 0) / 10
+    };
+
+    console.log('Weights:', weights);
+
     // Fetch all countries from 'countryranks'
     const { data: countries, error } = await supabase
       .from('countryranks')
@@ -52,26 +57,10 @@ router.post('/rankings', async (req, res) => {
       throw error;
     }
 
-// Define tolerance variables for filtering
-const min_tolerance = 2;
-
-// Filter countries based on provided criteria with tolerance
-const filteredCountries = countries.filter(country => {
-  return (
-    country.processingtime_rank >= processingTime - min_tolerance &&
-    country.stepstocompleteapplication_rank >= stepsToCompleteApplication - min_tolerance &&
-    country.documentchecklist_rank >= documentChecklist - min_tolerance &&
-    country.governmentfees_rank >= governmentFees - min_tolerance &&
-    country.pathtocitizenship_rank >= pathToCitizenship - min_tolerance &&
-    country.tradeagreements_rank >= tradeAgreement - min_tolerance &&
-    country.grantsources_rank >= grantSourcingApps - min_tolerance
-  );
-});
-
     // Calculate score for each country
-    const rankedCountries = filteredCountries.map(country => ({
+    const rankedCountries = countries.map(country => ({
       ...country,
-      score: calculateScore(country)
+      score: calculateScore(country, weights)
     }));
 
     // Sort countries based on their scores
@@ -85,11 +74,7 @@ const filteredCountries = countries.filter(country => {
 
     console.log('Top countries:', topCountries); // Print topCountries to the console
 
-    if (topCountries.length === 0) {
-      res.status(404).json({ message: 'No countries with given ranks, please try again' });
-    } else {
-      res.status(200).json({ topCountries });
-    }
+    res.status(200).json({ topCountries });
 
   } catch (error) {
     console.error('Error:', error.message);

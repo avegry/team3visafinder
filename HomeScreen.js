@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Keyboard, ScrollView } from 'react-native';
 import axios from 'axios'; // Import Axios for making HTTP requests
+import { ipAddress } from './IpAddress';
+
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.183:3000', // Replace with your IP address
+  baseURL: `http://${ipAddress}:3000`,
   timeout: 10000, // Timeout for requests (in milliseconds)
 });
 
@@ -29,13 +31,13 @@ const HomeScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       const response = await api.post('/rankings', rankings);
-    
+
       if (response.status !== 200) {
         throw new Error('Failed to submit rankings');
       }
-  
+
       const { topCountries } = response.data; // Extract topCountries from response data
-  
+
       navigation.navigate('Results', { topCountries }); // Pass topCountries as a navigation parameter
     } catch (error) {
       console.error('Error:', error);
@@ -47,7 +49,6 @@ const HomeScreen = ({ navigation }) => {
     // Navigate to User screen
     navigation.navigate('User');
   };
-  
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();

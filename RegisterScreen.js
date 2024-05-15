@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Switch } from 'react-native';
 import axios from 'axios';
+import { ipAddress } from './IpAddress';
 
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.183:3000', // Replace with your IP address
+  baseURL: `http://${ipAddress}:3000`,
   timeout: 10000, // Optional: Timeout for requests (in milliseconds)
 });
 
@@ -25,10 +26,10 @@ const RegistrationScreen = ({ navigation }) => {
 
   const handleRegister = async () => {
     try {
-      const response = await api.post('http://192.168.1.183:3000', {
-        username,
-        password,
-        email,
+      const response = await api.post('/register', {
+        username: username,
+        password: password,
+        email: email,
         date_of_birth: dateOfBirth,
         current_country_of_citizenship: currentCountryOfCitizenship,
         country_of_residency: countryOfResidency,
