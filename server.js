@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const apiRouter = require('./routes/api');
 const loginRouter = require('./routes/login');
 const rankingsRouter = require('./routes/rankings');
 const visaOptionsRouter = require('./routes/visaoptions');
@@ -18,7 +17,6 @@ app.use(cors());
 app.use(express.json());
 
 // Define routes
-app.post('/api', apiRouter);
 app.post('/login', loginRouter);
 app.post('/rankings', rankingsRouter);
 app.post('/visaoptions', visaOptionsRouter);
