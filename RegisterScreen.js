@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard, TouchableOpacity, ScrollView } from 'react-native';
 import axios from 'axios';
 import { ipAddress } from './IpAddress';
 
@@ -61,104 +61,109 @@ const RegistrationScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Register Now!</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Date of Birth"
-          value={dateOfBirth}
-          onChangeText={setDateOfBirth}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Current Country of Citizenship"
-          value={currentCountryOfCitizenship}
-          onChangeText={setCurrentCountryOfCitizenship}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Country of Residency"
-          value={countryOfResidency}
-          onChangeText={setCountryOfResidency}
-        />
-        <View style={styles.switchContainer}>
-          <Text style={styles.textStyle}>Criminal Record:</Text>
-          <Switch
-            value={criminalRecord}
-            onValueChange={setCriminalRecord}
-            trackColor={{ false: "#767577", true: "#1b2c56" }}
-            thumbColor={criminalRecord ? "#f4f3f4" : "#f4f3f4"}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Register Now!</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
           />
-        </View>
-        <View style={styles.switchContainer}>
-          <Text style={styles.textStyle}>Valid Passport:</Text>
-          <Switch
-            value={validPassport}
-            onValueChange={setValidPassport}
-            trackColor={{ false: "#767577", true: "#1b2c56" }}
-            thumbColor={validPassport ? "#f4f3f4" : "#f4f3f4"}
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
           />
-        </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Initial Investment Amount"
-          value={initialInvestmentAmount}
-          onChangeText={setInitialInvestmentAmount}
-        />
-        <View style={styles.switchContainer}>
-          <Text style={styles.textStyle}>Proof of Funds Available:</Text>
-          <Switch
-            value={proofOfFundsAvailable}
-            onValueChange={setProofOfFundsAvailable}
-            trackColor={{ false: "#767577", true: "#1b2c56" }}
-            thumbColor={proofOfFundsAvailable ? "#f4f3f4" : "#f4f3f4"}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
           />
-        </View>
-        <View style={styles.switchContainer}>
-          <Text style={styles.textStyle}>Health Insurance Established:</Text>
-          <Switch
-            value={healthInsuranceEstablished}
-            onValueChange={setHealthInsuranceEstablished}
-            trackColor={{ false: "#767577", true: "#1b2c56" }}
-            thumbColor={healthInsuranceEstablished ? "#f4f3f4" : "#f4f3f4"}
+          <TextInput
+            style={styles.input}
+            placeholder="Date of Birth"
+            value={dateOfBirth}
+            onChangeText={setDateOfBirth}
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Current Country of Citizenship"
+            value={currentCountryOfCitizenship}
+            onChangeText={setCurrentCountryOfCitizenship}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Country of Residency"
+            value={countryOfResidency}
+            onChangeText={setCountryOfResidency}
+          />
+          <View style={styles.switchContainer}>
+            <Text style={styles.textStyle}>Criminal Record:</Text>
+            <Switch
+              value={criminalRecord}
+              onValueChange={setCriminalRecord}
+              trackColor={{ false: "#767577", true: "#1b2c56" }}
+              thumbColor={criminalRecord ? "#f4f3f4" : "#f4f3f4"}
+            />
+          </View>
+          <View style={styles.switchContainer}>
+            <Text style={styles.textStyle}>Valid Passport:</Text>
+            <Switch
+              value={validPassport}
+              onValueChange={setValidPassport}
+              trackColor={{ false: "#767577", true: "#1b2c56" }}
+              thumbColor={validPassport ? "#f4f3f4" : "#f4f3f4"}
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Initial Investment Amount"
+            value={initialInvestmentAmount}
+            onChangeText={setInitialInvestmentAmount}
+          />
+          <View style={styles.switchContainer}>
+            <Text style={styles.textStyle}>Proof of Funds Available:</Text>
+            <Switch
+              value={proofOfFundsAvailable}
+              onValueChange={setProofOfFundsAvailable}
+              trackColor={{ false: "#767577", true: "#1b2c56" }}
+              thumbColor={proofOfFundsAvailable ? "#f4f3f4" : "#f4f3f4"}
+            />
+          </View>
+          <View style={styles.switchContainer}>
+            <Text style={styles.textStyle}>Health Insurance Established:</Text>
+            <Switch
+              value={healthInsuranceEstablished}
+              onValueChange={setHealthInsuranceEstablished}
+              trackColor={{ false: "#767577", true: "#1b2c56" }}
+              thumbColor={healthInsuranceEstablished ? "#f4f3f4" : "#f4f3f4"}
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Language Proficiency"
+            value={languageProficiency}
+            onChangeText={setLanguageProficiency}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Language Proficiency"
-          value={languageProficiency}
-          onChangeText={setLanguageProficiency}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',

@@ -56,10 +56,10 @@ const ResultsScreen = ({ route }) => {
             <Text style={styles.underline}>Document Checklist:</Text> {detail.documentchecklist}
           </Text>
           <Text style={styles.lineSpacing}>
-            <Text style={styles.underline}>Source Name:</Text> {detail.sourcename}
+            <Text style={styles.underline}>Grant Sourcing Name:</Text> {detail.sourcename}
           </Text>
           <Text style={styles.lineSpacing}>
-            <Text style={styles.underline}>Source URL:</Text>
+            <Text style={styles.underline}>Grant Sourcing URL:</Text>
             {' '} {/* Add a space before the URL */}
             <Text style={styles.link} onPress={() => handleOpenURL(detail.sourceurl)}>
               {detail.sourceurl}
