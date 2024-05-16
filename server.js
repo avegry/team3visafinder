@@ -6,6 +6,7 @@ const rankingsRouter = require('./routes/rankings');
 const visaOptionsRouter = require('./routes/visaoptions');
 const perksRouter = require('./routes/perks');
 const registerRouter = require('./routes/register');
+const userRouter = require('./routes/user');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.post('/rankings', rankingsRouter);
 app.post('/visaoptions', visaOptionsRouter);
 app.post('/perks', perksRouter);
 app.post('/register', registerRouter);
+app.post('/user', userRouter);
 
 // Routes
 app.get('/', (req, res) => {

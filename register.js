@@ -31,13 +31,13 @@ router.post('/register', async (req, res) => {
 
     if (userError) {
       console.error('Error checking existing user:', userError);
-      return res.status(500).json({ error: 'Failed to register user' });
+      return res.status(500).json({ error: 'Failed to register user. Please try again.' });
     }
 
     if (existingUsers.length > 0) {
       // Username already exists
       console.log('Username already exists:', username);
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(409).json({ error: 'Username already exists. Please choose a different username.' });
     }
 
     // Insert user data into the database
@@ -60,7 +60,7 @@ router.post('/register', async (req, res) => {
 
     if (insertionError) {
       console.error('Error registering user:', insertionError);
-      return res.status(500).json({ error: 'Failed to register user' });
+      return res.status(500).json({ error: 'Failed to register user. Please try again.' });
     }
 
     // Send a success response
@@ -68,7 +68,7 @@ router.post('/register', async (req, res) => {
 
   } catch (error) {
     console.error('Error registering user:', error);
-    res.status(500).json({ error: 'Failed to register user' });
+    res.status(500).json({ error: 'Failed to register user. Please try again.' });
   }
 });
 

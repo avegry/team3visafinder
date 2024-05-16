@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Switch } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Switch, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { ipAddress } from './IpAddress';
-
 
 const api = axios.create({
   baseURL: `http://${ipAddress}:3000`,
   timeout: 10000, // Optional: Timeout for requests (in milliseconds)
 });
-
 
 const RegistrationScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -27,9 +25,9 @@ const RegistrationScreen = ({ navigation }) => {
   const handleRegister = async () => {
     try {
       const response = await api.post('/register', {
-        username: username,
-        password: password,
-        email: email,
+        username,
+        password,
+        email,
         date_of_birth: dateOfBirth,
         current_country_of_citizenship: currentCountryOfCitizenship,
         country_of_residency: countryOfResidency,
@@ -48,94 +46,115 @@ const RegistrationScreen = ({ navigation }) => {
         alert('Registration failed. Please try again.');
       }
     } catch (error) {
-      console.error('Registration Error:', error);
-      alert('An error occurred during registration. Please try again.');
+      if (error.response) {
+        if (error.response.status === 401 || error.response.status === 409) {
+          alert('Username already exists. Please choose a different username.');
+        } else {
+          console.error('Registration Error:', error);
+          alert('An error occurred during registration. Please try again.');
+        }
+      } else {
+        console.error('Registration Error:', error);
+        alert('An error occurred during registration. Please try again.');
+      }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Registration</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Date of Birth"
-        value={dateOfBirth}
-        onChangeText={setDateOfBirth}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Current Country of Citizenship"
-        value={currentCountryOfCitizenship}
-        onChangeText={setCurrentCountryOfCitizenship}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Country of Residency"
-        value={countryOfResidency}
-        onChangeText={setCountryOfResidency}
-      />
-      <View style={styles.switchContainer}>
-        <Text>Criminal Record:</Text>
-        <Switch
-          value={criminalRecord}
-          onValueChange={setCriminalRecord}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Register Now!</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
         />
-      </View>
-      <View style={styles.switchContainer}>
-        <Text>Valid Passport:</Text>
-        <Switch
-          value={validPassport}
-          onValueChange={setValidPassport}
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
         />
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Initial Investment Amount"
-        value={initialInvestmentAmount}
-        onChangeText={setInitialInvestmentAmount}
-      />
-      <View style={styles.switchContainer}>
-        <Text>Proof of Funds Available:</Text>
-        <Switch
-          value={proofOfFundsAvailable}
-          onValueChange={setProofOfFundsAvailable}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
         />
-      </View>
-      <View style={styles.switchContainer}>
-        <Text>Health Insurance Established:</Text>
-        <Switch
-          value={healthInsuranceEstablished}
-          onValueChange={setHealthInsuranceEstablished}
+        <TextInput
+          style={styles.input}
+          placeholder="Date of Birth"
+          value={dateOfBirth}
+          onChangeText={setDateOfBirth}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Current Country of Citizenship"
+          value={currentCountryOfCitizenship}
+          onChangeText={setCurrentCountryOfCitizenship}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Country of Residency"
+          value={countryOfResidency}
+          onChangeText={setCountryOfResidency}
+        />
+        <View style={styles.switchContainer}>
+          <Text style={styles.textStyle}>Criminal Record:</Text>
+          <Switch
+            value={criminalRecord}
+            onValueChange={setCriminalRecord}
+            trackColor={{ false: "#767577", true: "#1b2c56" }}
+            thumbColor={criminalRecord ? "#f4f3f4" : "#f4f3f4"}
+          />
+        </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.textStyle}>Valid Passport:</Text>
+          <Switch
+            value={validPassport}
+            onValueChange={setValidPassport}
+            trackColor={{ false: "#767577", true: "#1b2c56" }}
+            thumbColor={validPassport ? "#f4f3f4" : "#f4f3f4"}
+          />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Initial Investment Amount"
+          value={initialInvestmentAmount}
+          onChangeText={setInitialInvestmentAmount}
+        />
+        <View style={styles.switchContainer}>
+          <Text style={styles.textStyle}>Proof of Funds Available:</Text>
+          <Switch
+            value={proofOfFundsAvailable}
+            onValueChange={setProofOfFundsAvailable}
+            trackColor={{ false: "#767577", true: "#1b2c56" }}
+            thumbColor={proofOfFundsAvailable ? "#f4f3f4" : "#f4f3f4"}
+          />
+        </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.textStyle}>Health Insurance Established:</Text>
+          <Switch
+            value={healthInsuranceEstablished}
+            onValueChange={setHealthInsuranceEstablished}
+            trackColor={{ false: "#767577", true: "#1b2c56" }}
+            thumbColor={healthInsuranceEstablished ? "#f4f3f4" : "#f4f3f4"}
+          />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Language Proficiency"
+          value={languageProficiency}
+          onChangeText={setLanguageProficiency}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
       </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Language Proficiency"
-        value={languageProficiency}
-        onChangeText={setLanguageProficiency}
-      />
-      <Button title="Register" onPress={handleRegister} />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -149,15 +168,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
+    marginTop: -100,
+    color: '#1b2c56',
+    fontWeight: 'bold',
   },
   input: {
     width: '100%',
     height: 40,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#1b2c56',
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+    textAlign: 'center',
   },
   switchContainer: {
     flexDirection: 'row',
@@ -165,6 +188,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginBottom: 10,
+  },
+  textStyle: {
+    color: '#1b2c56',
+  },
+  button: {
+    backgroundColor: '#1b2c56',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
   },
 });
 

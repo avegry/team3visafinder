@@ -6,6 +6,11 @@ const supabase = require('../supabase');
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
+    // Check if username or password is empty
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
     try {
         // Query the users table to find a user with the provided username
         const { data, error } = await supabase

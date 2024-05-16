@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Keyboard, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Keyboard, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { ipAddress } from './IpAddress';
 
@@ -22,11 +22,22 @@ const HomeScreen = ({ navigation }) => {
   });
 
   const handleChange = (title, value) => {
-    setRankings(prevState => ({
-      ...prevState,
-      [title]: value,
-    }));
+    if (value === null) {
+      // If value is null, remove the corresponding key from the state
+      setRankings(prevState => {
+        const newState = { ...prevState };
+        delete newState[title];
+        return newState;
+      });
+    } else if (/^\d{0,2}$/.test(value) && (value === '' || (parseInt(value) >= 1 && parseInt(value) <= 10))) {
+      // If value is within the range of 1 to 10 or an empty string
+      setRankings(prevState => ({
+        ...prevState,
+        [title]: value,
+      }));
+    }
   };
+  
 
   const handleSubmit = async () => {
     try {
@@ -47,7 +58,7 @@ const HomeScreen = ({ navigation }) => {
 
   const handleUser = () => {
     // Navigate to User screen
-    navigation.navigate('User');
+    navigation.navigate('My Info');
   };
 
   const dismissKeyboard = () => {
@@ -57,9 +68,10 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container} onTouchStart={dismissKeyboard}>
       <Text style={styles.title}>Visa Finder Questionnaire</Text>
-      <Text style={styles.subtitle}>Please rank each statement based on importance, 1 being not important and 10 being very important.</Text>
+      <Text style={styles.subtitle}>Please rank each statement based on importance: </Text> 
+      <Text style={styles.subtitle}>1 being irrelevant and 10 being extremely important.</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Processing Time</Text>
+        <Text style={styles.inputTitle}>Fast Processing Time</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -69,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Steps to Complete Application</Text>
+        <Text style={styles.inputTitle}>Few Steps to Complete Application</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -79,7 +91,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Document Checklist</Text>
+        <Text style={styles.inputTitle}>Easy Document Checklist</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -89,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Government Fees</Text>
+        <Text style={styles.inputTitle}>Low Government Fees</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -99,7 +111,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Trade Agreement</Text>
+        <Text style={styles.inputTitle}>Many Trade Agreements</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -109,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Path to Citizenship</Text>
+        <Text style={styles.inputTitle}>Quick Path to Citizenship</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -119,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Government Sponsored Perks</Text>
+        <Text style={styles.inputTitle}>Good Government Sponsored Perks</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -129,7 +141,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.inputTitle}>Grant Sourcing Apps</Text>
+        <Text style={styles.inputTitle}>Good Grant Sourcing Apps</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter ranking (1-10)"
@@ -138,8 +150,12 @@ const HomeScreen = ({ navigation }) => {
           onChangeText={value => handleChange('grantSourcingApps', value)}
         />
       </View>
-      <Button title="Submit" onPress={handleSubmit} />
-      <Button title="User Info" onPress={handleUser} />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleUser}>
+          <Text style={styles.buttonText}>My Info</Text>
+        </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -153,30 +169,46 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     marginBottom: 20,
+    color: '#1b2c56',
+    fontWeight: 'bold',
   },
   subtitle: {
     fontSize: 16,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: 'center',
   },
   inputContainer: {
-    marginBottom: 20,
-    alignItems: 'center', // Center items horizontally
+    marginTop: 10,
+    marginBottom: 10,
+    alignItems: 'center',
   },
   inputTitle: {
     fontSize: 18,
     marginBottom: 10,
-    textAlign: 'center', // Center text horizontally
+    textAlign: 'center',
+    color: '#1b2c56',
   },
   input: {
     width: 200,
     height: 40,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#1b2c56',
     borderRadius: 5,
     paddingHorizontal: 10,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#1b2c56',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 18,
   },
 });
 
